@@ -1,5 +1,6 @@
 package com.skkuaicapston.DepressionChatBot.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +33,7 @@ public class User {
     private String bio = "Please enter your bio!"; // 기본 자기소개
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    @JsonBackReference // 순환 참조 방지
     private List<ChatRoom> chatRooms;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

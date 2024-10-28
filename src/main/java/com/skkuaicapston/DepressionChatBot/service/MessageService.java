@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,12 +49,13 @@ public class MessageService {
 
 
     /** 사용자의 메시지를 저장하고 챗봇의 응답을 생성하는 메서드 **/
-    public Message sendMessage(Long chatRoomId, String senderType, String content) {
+    // 사용자 메시지와 봇 메시지를 반환하는 메서드
+    public List<Message> sendMessage(Long chatRoomId, String senderType, String content) {
         // 채팅방 조회
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new RuntimeException("ChatRoom not found"));
 
-        // 사용자의 메시지 저장
+        // 사용자의 메시지 생성 및 저장
         Message userMessage = new Message();
         userMessage.setChatRoom(chatRoom);
         userMessage.setSenderType(senderType);  // "USER"
@@ -61,21 +63,21 @@ public class MessageService {
         userMessage.setTimestamp(LocalDateTime.now());
         messageRepository.save(userMessage);
 
-        // 챗봇 응답 생성 및 저장 (사용자 메시지를 기반으로 자동 생성)
+        // 챗봇의 응답 생성 및 저장
+        Message botMessage = null;
         if ("USER".equals(senderType)) {
             String botResponse = generateBotResponse(content);  // 응답 생성
 
-            // 챗봇의 메시지 저장
-            Message botMessage = new Message();
+            botMessage = new Message();
             botMessage.setChatRoom(chatRoom);
             botMessage.setSenderType("BOT");  // "BOT"
             botMessage.setContent(botResponse);
             botMessage.setTimestamp(LocalDateTime.now());
-
             messageRepository.save(botMessage);
         }
 
-        return userMessage;  // 사용자의 메시지를 반환
+        // 사용자 메시지와 봇 메시지를 리스트로 반환
+        return Arrays.asList(userMessage, botMessage);
     }
 
 

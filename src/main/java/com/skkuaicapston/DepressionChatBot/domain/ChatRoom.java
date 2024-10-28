@@ -1,5 +1,6 @@
 package com.skkuaicapston.DepressionChatBot.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,11 +22,13 @@ public class ChatRoom {
 
     @ManyToOne
     @JoinColumn(name = "creator_id")
+    @JsonManagedReference // 순환 참조 방지
     private User creator;
 
     @Column(nullable = false)
     private LocalDate date;
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
+    @JsonManagedReference  // 순환 참조 방지
     private List<Message> messages;
 }

@@ -22,12 +22,12 @@ public class MessageController {
         return ResponseEntity.ok(messages);
     }
 
-    /** 메시지 전송 엔드포인트 (사용자 메시지와 챗봇 응답) **/
+    /** 메시지 전송 엔드포인트 (사용자 메시지와 챗봇 응답을 함께 반환) **/
     @PostMapping("/send")
-    public ResponseEntity<Message> sendMessage(@RequestParam Long chatRoomId,
-                                               @RequestParam String senderType,
-                                               @RequestParam String content) {
-        Message sentMessage = messageService.sendMessage(chatRoomId, senderType, content);
-        return ResponseEntity.ok(sentMessage);
+    public ResponseEntity<List<Message>> sendMessage(@RequestParam Long chatRoomId,
+                                                     @RequestParam String senderType,
+                                                     @RequestParam String content) {
+        List<Message> messages = messageService.sendMessage(chatRoomId, senderType, content);
+        return ResponseEntity.ok(messages);
     }
 }

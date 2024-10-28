@@ -1,6 +1,7 @@
 package com.skkuaicapston.DepressionChatBot.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,7 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name = "chatroom_id")
+    @JsonBackReference  // 순환 참조 방지를 위한 어노테이션 추가
     private ChatRoom chatRoom;
 
     @Column(nullable = false)
