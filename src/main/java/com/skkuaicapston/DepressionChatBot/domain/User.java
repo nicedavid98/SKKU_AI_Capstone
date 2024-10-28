@@ -26,7 +26,7 @@ public class User {
     private String realname;
 
     @Column(nullable = false)
-    private String profileImageUrl = "https://cdn2.ppomppu.co.kr/zboard/data3/2022/0509/m_20220509173224_d9N4ZGtBVR.jpeg"; // 기본 프로필 이미지 URL
+    private String profileImageUrl = "/images/default_profile_image.jpeg"; // 기본 프로필 이미지 URL
 
     @Column(nullable = false)
     private String bio = "Please enter your bio!"; // 기본 자기소개
