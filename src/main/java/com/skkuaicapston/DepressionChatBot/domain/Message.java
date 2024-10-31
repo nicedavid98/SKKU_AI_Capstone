@@ -25,7 +25,7 @@ public class Message {
     @Column(nullable = false)
     private String senderType;  // "USER" or "BOT"
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")  // DB에 저장하려는 메시지의 content 가 설정된 컬럼 길이보다 길어서 발생한 오류 해결
     private String content;
 
     @Column(nullable = false)
