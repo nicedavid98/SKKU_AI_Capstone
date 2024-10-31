@@ -3,31 +3,36 @@ package com.skkuaicapston.DepressionChatBot.controller;
 import com.skkuaicapston.DepressionChatBot.domain.Summary;
 import com.skkuaicapston.DepressionChatBot.service.SummaryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api/summary")
+@RequestMapping("/api/summaries")
 @RequiredArgsConstructor
 public class SummaryController {
 
     private final SummaryService summaryService;
 
-    /** 오늘 날짜의 요약을 저장/업데이트하는 엔드포인트 **/
-    @PostMapping("/save")
-    public ResponseEntity<Summary> saveDailySummary(@RequestParam Long userId) {
-        Summary summary = summaryService.saveDailySummary(userId);
-        return ResponseEntity.ok(summary);
-    }
+    @GetMapping("/{userId}/{date}")
+    public ResponseEntity<Map<String, Object>> getOrCreateDailySummary(
+            @PathVariable Long userId,
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        Summary summary = summaryService.getOrCreateDailySummary(userId, date);
 
-    /** 특정 날짜의 요약을 조회하는 엔드포인트 **/
-    @GetMapping("/get")
-    public ResponseEntity<Summary> getDailySummary(@RequestParam Long userId,
-                                                   @RequestParam String date) {
-        LocalDate localDate = LocalDate.parse(date);
-        Summary summary = summaryService.getDailySummary(userId, localDate);
-        return ResponseEntity.ok(summary);
+        if (summary != null) {
+            // 필요한 데이터만 포함하는 Map 생성
+            Map<String, Object> response = new HashMap<>();
+            response.put("summary", summary.getSummary());
+            response.put("depressionLevel", summary.getDepressionLevel());
+
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
