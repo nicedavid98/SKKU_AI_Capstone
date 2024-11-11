@@ -1,5 +1,6 @@
 package com.skkuaicapston.DepressionChatBot.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +18,7 @@ public class Summary {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference  // 순환 참조 방지
     private User user;
 
     @Column(nullable = false)

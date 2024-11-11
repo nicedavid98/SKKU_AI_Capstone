@@ -1,6 +1,7 @@
 package com.skkuaicapston.DepressionChatBot.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,5 +38,6 @@ public class User {
     private List<ChatRoom> chatRooms;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference  // 순환 참조 방지
     private List<Summary> summaries;
 }
