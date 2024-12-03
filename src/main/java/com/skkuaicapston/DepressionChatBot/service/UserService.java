@@ -25,7 +25,7 @@ public class UserService {
         newUser.setPassword(password);
         newUser.setRealname(realname);
         newUser.setBio(bio != null ? bio : "Please enter your bio!");
-        newUser.setProfileImageUrl("https://cdn2.ppomppu.co.kr/zboard/data3/2022/0509/m_20220509173224_d9N4ZGtBVR.jpeg"); // 기본 프로필 사진 URL
+        newUser.setProfileImageUrl("/images/default_profile_image.jpeg"); // 기본 프로필 사진 URL
 
         return userRepository.save(newUser);
     }
