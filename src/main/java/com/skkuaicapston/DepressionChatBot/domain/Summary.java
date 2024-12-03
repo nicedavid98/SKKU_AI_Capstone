@@ -27,6 +27,6 @@ public class Summary {
     @Column(nullable = false)
     private double depressionLevel;  // -1 <= Good < -0.9, -0.9 <= Moderate < 0, 0 <= needs attention < 0.9, 0.9 <= severe <= 1, no chat == 10
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String summary;
 }

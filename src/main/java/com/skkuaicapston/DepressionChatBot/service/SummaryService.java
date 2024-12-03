@@ -49,8 +49,8 @@ public class SummaryService {
         List<String> allChats = messageService.getAllChatsForDate(userId, date);
 
         if (existingSummary != null) {
-            // 오늘 날짜이고 새로운 채팅 내용이 있으면 요약 업데이트
-            if (date.equals(LocalDate.now()) && !Objects.equals(existingSummary.getSummary(), generateConversationSummary(allChats))) {
+            // 오늘 날짜이면 요약 업데이트
+            if (date.equals(LocalDate.now())) {
                 return updateSummary(existingSummary, userChats, allChats);
             }
             return existingSummary;
@@ -99,7 +99,8 @@ public class SummaryService {
         try {
             // ChatGPT 요청 메시지 설정
             List<Map<String, String>> messages = new ArrayList<>();
-            String prompt = "Summarize the following conversation between a user and a chatbot. Do not print out your personal opinions other than the summary. Write in English within 150 characters.";
+//            String prompt = "Summarize the following conversation between a user and a chatbot. Do not print out your personal opinions other than the summary. Write in English within 150 characters.";
+            String prompt = "You are a bot that summarizes user conversations. Do not print out your personal opinions other than the summary. Write in English within 150 characters.";
             messages.add(Map.of("role", "system", "content", prompt));
 
             // 대화 내용 추가
