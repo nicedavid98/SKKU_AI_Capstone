@@ -25,7 +25,7 @@ public class Summary {
     private LocalDate date;
 
     @Column(nullable = false)
-    private double depressionLevel;  // -1 <= Good < -0.9, -0.9 <= Moderate < 0, 0 <= needs attention < 0.9, 0.9 <= severe <= 1, no chat == 10
+    private double depressionLevel = -1;  // Cannot determine(No Chats) : -1, 0 <= Depression Detected <= 0.002, 0.002 < Needs Attention <= 0.995, 0.995 < Good <= 1
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String summary;

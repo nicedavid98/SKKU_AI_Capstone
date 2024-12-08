@@ -28,6 +28,7 @@ public class SummaryService {
     private final SummaryRepository summaryRepository;
     private final UserRepository userRepository;
     private final MessageService messageService;
+    private final DepressionPredictService depressionPredictService;
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Value("${openai.api.key}")
@@ -90,8 +91,32 @@ public class SummaryService {
 
     /** AI 모델을 통해 우울감 지수 계산 **/
     private double calculateDepressionLevel(List<String> userChats) {
-        // 추후 AI 모델과 연동하여 실제 우울감 지수를 계산하는 로직이 들어갈 부분
-        return 1;
+        if (userChats.isEmpty()) {
+            return -1; // 채팅 데이터가 없을 경우 -1 반환
+        }
+
+        // 각 채팅 데이터에 대해 우울감 지수를 계산
+        double minDepressionScore = 1;
+        for (String chat : userChats) {
+            try {
+                double depressionScore = depressionPredictService.getPrediction(chat);
+
+                // 모든 채팅 순회 전에 확실한 우울증이 감지된 경우, 순회 중단
+                if (depressionScore < 0.001) {
+                    minDepressionScore =  depressionScore;
+                    break;
+                }
+
+                // 가장 우울감 지수가 높은 채팅의 우울감 지수를 찾기
+                if (depressionScore < minDepressionScore) {
+                    minDepressionScore = depressionScore;
+                }
+            } catch (Exception e) {
+                System.err.println("Error while processing chat: " + chat + " - " + e.getMessage());
+            }
+        }
+
+        return minDepressionScore;
     }
 
     /** AI 모델을 통해 대화 요약 생성 **/
