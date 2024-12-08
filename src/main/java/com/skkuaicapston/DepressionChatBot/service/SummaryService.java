@@ -100,7 +100,8 @@ public class SummaryService {
             // ChatGPT 요청 메시지 설정
             List<Map<String, String>> messages = new ArrayList<>();
 //            String prompt = "Summarize the following conversation between a user and a chatbot. Do not print out your personal opinions other than the summary. Write in English within 150 characters.";
-            String prompt = "You are a bot that summarizes user conversations. Do not print out your personal opinions other than the summary. Write in English within 150 characters.";
+//            String prompt = "You are a bot that summarizes user conversations. Do not print out your personal opinions other than the summary.  Write in English within 150 characters.";
+            String prompt = "You are a bot that summarizes the conversation between the user and the chatbot. Based on the conversation, summarize what the user experienced and what their emotional state was. Do not print out your personal opinions other than the summary.  Write in English within 150 characters.";
             messages.add(Map.of("role", "system", "content", prompt));
 
             // 대화 내용 추가
