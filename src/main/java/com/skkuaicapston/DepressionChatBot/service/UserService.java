@@ -2,7 +2,9 @@ package com.skkuaicapston.DepressionChatBot.service;
 
 import com.skkuaicapston.DepressionChatBot.domain.User;
 import com.skkuaicapston.DepressionChatBot.repository.UserRepository;
+import com.skkuaicapston.DepressionChatBot.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,6 +14,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // 암호화 인코더
 
     /** 회원가입 기능 **/
     public User registerUser(String username, String password, String realname, String bio) {
@@ -22,7 +25,7 @@ public class UserService {
 
         User newUser = new User();
         newUser.setUsername(username);
-        newUser.setPassword(password);
+        newUser.setPassword(passwordEncoder.encode(password)); // 비밀번호 암호화
         newUser.setRealname(realname);
         newUser.setBio(bio != null ? bio : "Please enter your bio!");
         newUser.setProfileImageUrl("/images/default_profile_image.jpeg"); // 기본 프로필 사진 URL
@@ -31,12 +34,14 @@ public class UserService {
     }
 
     /** 로그인 기능 **/
-    public User loginUser(String username, String password) {
-        Optional<User> user = Optional.ofNullable(userRepository.findByUsername(username));
-        if (user.isEmpty() || !user.get().getPassword().equals(password)) {
+    public String loginUser(String username, String password) {
+        User user = userRepository.findByUsername(username);
+        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
             throw new RuntimeException("Invalid username or password.");
         }
-        return user.get();
+
+        // 로그인 성공 시 JWT 토큰 생성
+        return JwtTokenUtil.generateToken(username);
     }
 
     /** 프로필 정보 변경 기능 **/

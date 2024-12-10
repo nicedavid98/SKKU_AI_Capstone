@@ -25,9 +25,9 @@ public class UserController {
 
     /** 로그인 엔드포인트 **/
     @PostMapping("/login")
-    public ResponseEntity<User> loginUser(@RequestParam String username,
+    public ResponseEntity<String> loginUser(@RequestParam String username,
                                           @RequestParam String password) {
-        User loggedInUser = userService.loginUser(username, password);
+        String loggedInUser = userService.loginUser(username, password);
         return ResponseEntity.ok(loggedInUser);
     }
 
